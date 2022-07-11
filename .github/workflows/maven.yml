@@ -22,6 +22,12 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
         cache: maven
+    - name: Deploy Application  
+      run: |
+        aws ssm send-command \
+        --document-name "CD-Application" \
+        --targets "Key=instanceids,Values=i-00cfe12638eb1784c" 
+
     - name: Build with Maven
       run: ./mvnw spring-boot:build-image
     - name: CheckImage
