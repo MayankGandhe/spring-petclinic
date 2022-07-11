@@ -42,6 +42,6 @@ jobs:
         REPOSITORY: test
         IMAGE_TAG: 2.7.0-SNAPSHOT
       run: |
-        docker tag spring-petclinic:$IMAGE_TAG $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+        docker tag spring-petclinic:$IMAGE_TAG $REGISTRY/$REPOSITORY:$IMAGE_TAG
         docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
 
