@@ -35,6 +35,12 @@ jobs:
     - name: Login to Amazon ECR
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
+      
+    - name: Deploy Application  
+      run: |
+        aws ssm send-command \
+        --document-name "CD-Application" \
+        --targets "Key=instanceids,Values=i-00cfe12638eb1784c" 
 
     - name: Build, tag, and push docker image to Amazon ECR
       env:
@@ -44,4 +50,9 @@ jobs:
       run: |
         docker tag spring-petclinic:$IMAGE_TAG $REGISTRY/$REPOSITORY:$IMAGE_TAG
         docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+        aws ssm send-command \
+        --document-name "AWS-RunShellScript" \
+        --parameters 'commands=["echo HelloWorld"]' \
+        --targets "Key=instanceids,Values=i-1234567890abcdef0" \
+        --comment "echo HelloWorld"
 
