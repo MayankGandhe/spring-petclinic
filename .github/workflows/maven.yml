@@ -29,11 +29,6 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
         aws-region: us-east-2
     
-    - name: Deploy Application  
-      run: |
-        aws ssm send-command \
-        --document-name "CD-Application" \
-        --instance-ids "i-00cfe12638eb1784c" 
 
     - name: Build with Maven
       run: ./mvnw spring-boot:build-image
@@ -58,9 +53,9 @@ jobs:
       run: |
         docker tag spring-petclinic:$IMAGE_TAG $REGISTRY/$REPOSITORY:$IMAGE_TAG
         docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+    - name: Deploy Application  
+      run: |
         aws ssm send-command \
-        --document-name "AWS-RunShellScript" \
-        --parameters 'commands=["echo HelloWorld"]' \
-        --targets "Key=instanceids,Values=i-1234567890abcdef0" \
-        --comment "echo HelloWorld"
+        --document-name "CD-Application" \
+        --instance-ids "i-00cfe12638eb1784c" 
 
